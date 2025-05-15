@@ -144,6 +144,6 @@ Total time for completion: 7 days
 Make sure to have the project running locally and a working Postman setup for demonstration.
 
 📫 Contact
-For any issues or clarifications, feel free to open an issue or reach out via GitHub.
+For any issues or clarifications, feel free to open an issue or reach out via GitHub or EMAIL:collinsngene@gmail.com
 
-```
+Thank you 😁
