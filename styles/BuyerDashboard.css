@@ -1,0 +1,251 @@
+.buyer-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-8) var(--spacing-4);
+  }
+  
+  .dashboard-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-8);
+    color: var(--color-gray-900);
+  }
+  
+  .change-message-alert {
+    margin-bottom: var(--spacing-6);
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+  }
+  
+  .dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+  
+  .deposit-card,
+  .buy-card,
+  .products-card,
+  .history-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow var(--transition-normal) var(--transition-ease);
+  }
+  
+  .deposit-card:hover,
+  .buy-card:hover,
+  .products-card:hover,
+  .history-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-4);
+    color: var(--color-gray-800);
+  }
+  
+  .deposit-amount {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+  
+  .reset-button {
+    margin-top: var(--spacing-4);
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border: none;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--border-radius);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background-color var(--transition-fast) var(--transition-ease);
+  }
+  
+  .reset-button:hover {
+    background-color: var(--color-secondary-dark);
+  }
+  
+  .loading-indicator {
+    padding: var(--spacing-6);
+    text-align: center;
+    color: var(--color-gray-600);
+    font-size: var(--font-size-lg);
+  }
+  
+  .purchase-history {
+    overflow: auto;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-base);
+  }
+  
+  .history-table th,
+  .history-table td {
+    padding: var(--spacing-3) var(--spacing-2);
+    text-align: left;
+    border-bottom: 1px solid var(--color-gray-300);
+  }
+  
+  .history-table th {
+    background-color: var(--color-gray-100);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+  }
+  
+  .history-table tr:nth-child(even) {
+    background-color: var(--color-gray-50);
+  }
+  
+  .history-table tr:hover {
+    background-color: var(--color-primary-light);
+  }
+  
+  .status-completed {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .empty-history {
+    padding: var(--spacing-6);
+    text-align: center;
+    color: var(--color-gray-600);
+    font-style: italic;
+  }
+  
+  /* Custom styling for form elements within the dashboard */
+  .buyer-dashboard input[type="text"],
+  .buyer-dashboard input[type="number"],
+  .buyer-dashboard select {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-3);
+    transition: border-color var(--transition-fast) var(--transition-ease),
+                box-shadow var(--transition-fast) var(--transition-ease);
+  }
+  
+  .buyer-dashboard input[type="text"]:focus,
+  .buyer-dashboard input[type="number"]:focus,
+  .buyer-dashboard select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+  }
+  
+  .buyer-dashboard label {
+    display: block;
+    margin-bottom: var(--spacing-2);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
+  }
+
+  .product-preview {
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    background-color: var(--color-gray-50);
+  }
+  
+  .product-name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .product-cost {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .product-actions {
+    display: flex;
+    gap: var(--spacing-2);
+    align-items: center;
+  }
+  
+  .product-quantity {
+    width: 60px;
+    padding: var(--spacing-2);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+  }
+  
+  .buy-now-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .view-more-button {
+    margin-top: var(--spacing-4);
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .buyer-dashboard {
+      padding: var(--spacing-4) var(--spacing-2);
+    }
+    
+    .dashboard-title {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-6);
+    }
+    
+    .card-title {
+      font-size: var(--font-size-lg);
+    }
+    
+    .history-table th,
+    .history-table td {
+      padding: var(--spacing-2);
+      font-size: var(--font-size-sm);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .history-table {
+      font-size: var(--font-size-sm);
+    }
+    
+    .status-completed {
+      padding: var(--spacing-1);
+    }
+  }

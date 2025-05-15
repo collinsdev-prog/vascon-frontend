@@ -1,0 +1,76 @@
+.auth-container {
+    background-color: var(--color-white);
+    padding: var(--spacing-10);
+    max-width: 400px;
+    margin: 4rem auto;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+  
+  .auth-container h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-6);
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+  
+  .auth-form input,
+  .auth-form select {
+    padding: var(--spacing-3);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+    transition: border-color var(--transition-fast) var(--transition-ease);
+  }
+  
+  .auth-form input:focus,
+  .auth-form select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  
+  .auth-form button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-3);
+    border: none;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-fast) var(--transition-ease);
+  }
+  
+  .auth-form button:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+  }
+  
+  .auth-form button:disabled {
+    background-color: var(--color-gray-400);
+    cursor: not-allowed;
+  }
+  
+  .error {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+  }
+
+  .coin-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .coin-selection label {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .coin-selection select {
+    padding: 10px;
+  }
+  

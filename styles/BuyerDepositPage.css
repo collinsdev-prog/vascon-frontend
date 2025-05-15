@@ -1,0 +1,51 @@
+.buyer-deposit {
+    padding: 2rem;
+  }
+  
+  .buyer-deposit h1 {
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .dashboard-section {
+    width: 100%;
+  }
+  
+  .account-info {
+    padding: 1rem 0;
+  }
+  
+  .account-info p {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+  }
+  
+  .action-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .deposit-instructions {
+    margin-bottom: 1.5rem;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .buyer-deposit {
+      padding: 1rem;
+    }
+  }
