@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useProducts } from '@/context/ProductsContext';
 import { useRouter, useParams } from 'next/navigation';
 import ProductForm from '@/components/products/ProductForm';
-import '../styles/Products.css';
+import '@/styles/Products.css';
 
 const EditProductPage = () => {
   const { isAuthenticated, isSeller, loading: authLoading } = useAuth();
