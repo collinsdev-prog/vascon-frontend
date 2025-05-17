@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/context/ProductsContext";
 import Button from "@/components/ui/Button";
 import Alert from "@/components/ui/Alert";
 import "@/styles/ProductForm.css";
 
-const ProductForm = ({ productId }) => {
+const ProductForm = ({ productId, initialData, onFormChange }) => {
   const router = useRouter();
   const { getProductById, addProduct, updateProduct } = useProducts();
 
@@ -17,11 +17,23 @@ const ProductForm = ({ productId }) => {
     amountAvailable: 0,
   });
 
+  const [originalData, setOriginalData] = useState(null);
   const [errors, setErrors] = useState({});
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alert, setAlert] = useState({ show: false, type: "", message: "" });
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+
+  // Compare current form data with original data to detect changes
+  const checkFormChanges = useCallback(() => {
+    if (!originalData) return false;
+    
+    return (
+      formData.productName !== originalData.productName ||
+      formData.cost !== originalData.cost ||
+      formData.amountAvailable !== originalData.amountAvailable
+    );
+  }, [formData, originalData]);
 
   // If productId is provided, fetch product data
   useEffect(() => {
@@ -33,13 +45,19 @@ const ProductForm = ({ productId }) => {
   
       try {
         setIsLoadingProduct(true);
-        const product = await getProductById(productId);
+        
+        // Use initialData if provided, otherwise fetch it
+        const product = initialData || await getProductById(productId);
+        
         if (product) {
-          setFormData({
+          const formattedData = {
             productName: product.productName || '',
             cost: product.cost || 0,
             amountAvailable: product.amountAvailable || 0,
-          });
+          };
+          
+          setFormData(formattedData);
+          setOriginalData(formattedData);
         }
         setInitialDataLoaded(true);
       } catch (error) {
@@ -51,8 +69,15 @@ const ProductForm = ({ productId }) => {
     };
   
     fetchProductData();
-  }, [productId, getProductById]);
+  }, [productId, getProductById, initialData]);
   
+  // Notify parent component about form changes
+  useEffect(() => {
+    if (initialDataLoaded && onFormChange) {
+      const hasChanges = checkFormChanges();
+      onFormChange(hasChanges);
+    }
+  }, [formData, initialDataLoaded, checkFormChanges, onFormChange]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -106,6 +131,10 @@ const ProductForm = ({ productId }) => {
         // Update existing product
         await updateProduct(productId, formData);
         showAlert("success", "Product updated successfully");
+        // Update original data to match current data after successful save
+        setOriginalData({...formData});
+        // Notify parent that there are no changes anymore
+        if (onFormChange) onFormChange(false);
       } else {
         // Create new product
         await addProduct(formData);
@@ -116,6 +145,8 @@ const ProductForm = ({ productId }) => {
           cost: 0,
           amountAvailable: 0,
         });
+        // Notify parent that there are no changes anymore
+        if (onFormChange) onFormChange(false);
       }
 
       // Redirect to products page after a short delay

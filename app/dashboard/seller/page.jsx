@@ -13,9 +13,12 @@ import '@/styles/Dashboard.css';
 
 const SellerDashboard = () => {
   const [alert, setAlert] = useState({ show: false, type: '', message: '' });
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
   const { user } = useAuth();
   const router = useRouter();
-  
+
   // Use ProductsContext
   const { 
     sellerProducts, 
@@ -23,7 +26,7 @@ const SellerDashboard = () => {
     fetchSellerProducts, 
     deleteProduct 
   } = useProducts();
-  
+
   // Use VendingContext
   const { 
     salesStats, 
@@ -48,20 +51,6 @@ const SellerDashboard = () => {
     fetchSalesStats();
   }, [user, router, fetchSellerProducts, fetchSalesStats]);
 
-  const handleDeleteProduct = async (productId) => {
-    try {
-      await deleteProduct(productId);
-      showAlert('success', 'Product deleted successfully');
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      showAlert('error', error.message || 'Failed to delete product');
-    }
-  };
-
-  const handleEditProduct = (productId) => {
-    router.push(`/products/edit/${productId}`);
-  };
-
   const showAlert = (type, message) => {
     setAlert({ show: true, type, message });
     setTimeout(() => {
@@ -69,14 +58,40 @@ const SellerDashboard = () => {
     }, 5000);
   };
 
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDeleteProduct = async () => {
+    try {
+      await deleteProduct(productToDelete.id);
+      showAlert('success', 'Product deleted successfully');
+      setShowDeleteDialog(false);
+      setProductToDelete(null);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      showAlert('error', error.message || 'Failed to delete product');
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteDialog(false);
+    setProductToDelete(null);
+  };
+
+  const handleEditProduct = (productId) => {
+    router.push(`/products/edit/${productId}`);
+  };
+
   return (
     <div className="dashboard seller-dashboard">
       <h1>Seller Dashboard</h1>
-      
+
       {alert.show && (
         <Alert type={alert.type} message={alert.message} onClose={() => setAlert({ show: false })} />
       )}
-      
+
       <div className="dashboard-grid">
         <div className="dashboard-section">
           <Card title="Seller Stats">
@@ -99,7 +114,7 @@ const SellerDashboard = () => {
               </div>
             )}
           </Card>
-          
+
           <Card title="Quick Actions">
             <div className="quick-actions">
               <Link href="seller/products/add">
@@ -111,7 +126,7 @@ const SellerDashboard = () => {
             </div>
           </Card>
         </div>
-        
+
         <div className="dashboard-section large">
           <Card title="My Products">
             {productsLoading ? (
@@ -144,7 +159,7 @@ const SellerDashboard = () => {
                           <Button 
                             variant="danger" 
                             size="small" 
-                            onClick={() => handleDeleteProduct(product.id)}
+                            onClick={() => handleDeleteClick(product)}
                           >
                             Delete
                           </Button>
@@ -157,7 +172,7 @@ const SellerDashboard = () => {
             ) : (
               <div className="empty-state">
                 <p>You haven't added any products yet.</p>
-                <Link href="/products/add">
+                <Link href="/dashboard/seller/products/add">
                   <Button variant="primary">Add Your First Product</Button>
                 </Link>
               </div>
@@ -165,6 +180,47 @@ const SellerDashboard = () => {
           </Card>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteDialog && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>Confirm Delete</h2>
+            <p>Are you sure you want to delete the product <strong>{productToDelete?.productName}</strong>?</p>
+            <div className="modal-actions">
+              <Button variant="danger" onClick={confirmDeleteProduct}>Yes, Delete</Button>
+              <Button variant="secondary" onClick={cancelDelete}>Cancel</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        .modal-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+        }
+        .modal {
+          background: white;
+          padding: 2rem;
+          border-radius: 8px;
+          width: 90%;
+          max-width: 400px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          text-align: center;
+        }
+        .modal-actions {
+          margin-top: 1.5rem;
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+        }
+      `}</style>
     </div>
   );
 };
