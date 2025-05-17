@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
+import { formatCentsToDollars } from '@/utils/currency';
 import '@/styles/Forms.css';
 
 const DepositForm = ({ onDeposit }) => {
   const [selectedCoin, setSelectedCoin] = useState(null);
-  
+
   const availableCoins = [5, 10, 20, 50, 100];
-  
+
   const handleCoinSelect = (coin) => {
     setSelectedCoin(coin);
   };
-  
+
   const handleDeposit = () => {
     if (selectedCoin) {
       onDeposit(selectedCoin);
       setSelectedCoin(null); // Reset selection after deposit
     }
   };
-  
+
   return (
     <div className="deposit-form">
       <div className="coin-selection">
@@ -27,18 +28,18 @@ const DepositForm = ({ onDeposit }) => {
             className={`coin ${selectedCoin === coin ? 'selected' : ''}`}
             onClick={() => handleCoinSelect(coin)}
           >
-            {coin}¢
+            {formatCentsToDollars(coin)}
           </button>
         ))}
       </div>
-      
+
       <div className="deposit-actions">
         <Button 
           onClick={handleDeposit} 
           disabled={!selectedCoin}
           variant="primary"
         >
-          Deposit {selectedCoin ? `${selectedCoin}¢` : ''}
+          Deposit {selectedCoin ? formatCentsToDollars(selectedCoin) : ''}
         </Button>
       </div>
     </div>

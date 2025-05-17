@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useProducts } from '@/context/ProductsContext';
 import { useVending } from '@/context/VendingContext';
 import { toast } from 'react-hot-toast';
+import { formatCentsToDollars } from '@/utils/currency';
 
 const ProductCard = ({ product }) => {
   const { user, isAuthenticated, isSeller, isBuyer } = useAuth();
@@ -14,7 +15,8 @@ const ProductCard = ({ product }) => {
   const [isLoading, setIsLoading] = useState(false);
   
   // Calculate if user can afford this product
-  const canAfford = deposit >= product.cost * quantity;
+  const totalCost = product.cost * quantity;
+  const canAfford = deposit >= totalCost;
   const isAvailable = product.amountAvailable >= quantity;
   
   const handleDelete = async () => {
@@ -49,14 +51,10 @@ const ProductCard = ({ product }) => {
     
     setIsLoading(true);
     try {
-      const result = await handleBuy(product.id, quantity);
-      toast.success(`Successfully purchased ${quantity} ${product.productName}!`);
-      
-      // Show change information if any
-      if (result.change && result.change.length > 0) {
-        const changeStr = result.change.map(coin => `${coin}¢`).join(', ');
-        toast.success(`Your change: ${changeStr}`);
-      }
+      await handleBuy(product.id, quantity);
+      // Note: We don't need to handle toast notifications here
+      // The purchase result will be displayed via the PurchaseResult component
+      // that we added to the ProductsPage
       
       // Reset quantity after purchase
       setQuantity(1);
@@ -85,13 +83,13 @@ const ProductCard = ({ product }) => {
   return (
     <div className="product-card">
       <div className="product-image">
-        {/* You could add an actual image here if available */}
+        {/* This is supposed to be be the product image */}
         <div style={{ fontSize: '2rem' }}>🛒</div>
       </div>
       
       <div className="product-details">
         <h3 className="product-name">{product.productName}</h3>
-        <div className="product-price">{product.cost}¢</div>
+        <div className="product-price">{formatCentsToDollars(product.cost)}</div>
         <div className="product-availability">
           Available: {product.amountAvailable} items
         </div>
@@ -145,7 +143,7 @@ const ProductCard = ({ product }) => {
               onClick={handlePurchase}
               disabled={!canAfford || !isAvailable || isLoading}
             >
-              {isLoading ? 'Processing...' : `Buy Now (${product.cost * quantity}¢)`}
+              {isLoading ? 'Processing...' : `Buy Now (${formatCentsToDollars(totalCost)})`}
             </button>
           ) : (
             <button 

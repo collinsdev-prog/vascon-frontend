@@ -44,7 +44,7 @@ export const ProductsProvider = ({ children }) => {
     setLoadingAll(true); 
     try {
       const response = await api("/products", "GET");
-      // console.log("ProductsContext - Fetched all products response:", response);
+      console.log("ProductsContext - Fetched all products response:", response);
   
       const productsArray = extractProductsArray(response);
       // console.log("Extracted products array:", productsArray);

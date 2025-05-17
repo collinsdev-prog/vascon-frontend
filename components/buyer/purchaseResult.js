@@ -1,5 +1,6 @@
 import React from 'react';
 import { useVending } from '@/context/VendingContext';
+import { formatCentsToDollars } from '@/utils/currency';
 import '@/styles/PurchaseResult.css';
 
 const PurchaseResult = () => {
@@ -17,8 +18,8 @@ const PurchaseResult = () => {
       </div>
       
       <div className="purchase-summary">
-        <p>Deposited amount: <strong>{depositedAmount} cents</strong></p>
-        <p>Total spent: <strong>{totalSpent} cents</strong></p>
+        <p>Deposited amount: <strong>{formatCentsToDollars(depositedAmount)}</strong></p>
+        <p>Total spent: <strong>{formatCentsToDollars(totalSpent)}</strong></p>
       </div>
       
       <div className="purchased-products">
@@ -26,7 +27,7 @@ const PurchaseResult = () => {
         <ul>
           {products.map((product) => (
             <li key={product.productId}>
-              {product.amount}x {product.productName} - {product.cost} cents
+              {product.amount}x {product.productName} - {formatCentsToDollars(product.cost)}
             </li>
           ))}
         </ul>

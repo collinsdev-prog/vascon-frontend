@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useProducts } from "@/context/ProductsContext";
 import { useAuth } from "@/context/AuthContext";
 import ProductCard from "./ProductCard";
-import "@/styles/ProductsList.css"; // Assuming you have a CSS file for styling
+import "@/styles/ProductsList.css"; 
 
 const ProductsList = ({ sellerOnly = false }) => {
   const {

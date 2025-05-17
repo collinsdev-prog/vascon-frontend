@@ -1,15 +1,15 @@
 "use client";
-
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useProducts } from "@/context/ProductsContext";
 import { useVending } from "@/context/VendingContext";
 import DepositForm from "@/components/buyer/DepositForm";
-import BuyForm from "@/components/buyer/BuyForm";
+// import BuyForm from "@/components/buyer/BuyForm";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Alert from "@/components/ui/Alert";
+import { formatCentsToDollars } from "@/utils/currency";
 import PurchaseResult from "@/components/buyer/purchaseResult";
 import "@/styles/BuyerDashboard.css";
 
@@ -28,7 +28,6 @@ const BuyerDashboard = () => {
     changeMessage,
     purchaseDetail,
   } = useVending();
-
   useEffect(() => {
     if (user?.role !== "buyer") {
       router.push("/login");
@@ -38,8 +37,35 @@ const BuyerDashboard = () => {
   useEffect(() => {
     fetchAllProducts();
     fetchPurchaseHistory();
-  }, [fetchAllProducts, fetchPurchaseHistory]);
+    // Check if table is scrollable and add appropriate class
+    const checkTableOverflow = () => {
+      const tableWrappers = document.querySelectorAll(".table-responsive");
+      tableWrappers.forEach((wrapper) => {
+        if (wrapper.scrollWidth > wrapper.clientWidth) {
+          wrapper.classList.add("has-overflow");
+        } else {
+          wrapper.classList.remove("has-overflow");
+        }
+      });
+    };
 
+    // Initial check
+    setTimeout(checkTableOverflow, 100);
+
+    // Set up resize observer to check when window size changes
+    const resizeObserver = new ResizeObserver(checkTableOverflow);
+    const tableWrapper = document.querySelector(".table-responsive");
+    if (tableWrapper) {
+      resizeObserver.observe(tableWrapper);
+    }
+
+    return () => {
+      if (tableWrapper) {
+        resizeObserver.unobserve(tableWrapper);
+      }
+    };
+  }, [fetchAllProducts, fetchPurchaseHistory]);
+  
   return (
     <div className="buyer-dashboard">
       {changeMessage && (
@@ -47,17 +73,18 @@ const BuyerDashboard = () => {
           {changeMessage}
         </Alert>
       )}
+      {purchaseDetail && <PurchaseResult result={purchaseDetail} />}
 
-{purchaseDetail && <PurchaseResult result={purchaseDetail} />}
-
-      <h2 className="dashboard-title">Buyer Dashboard</h2>
+      <h3 className="dashboard-title">Dashboard</h3>
 
       <div className="dashboard-grid">
         <div className="dashboard-column">
           <Card className="deposit-card">
             <h3 className="card-title">
               Available Deposit:{" "}
-              <span className="deposit-amount">{deposit} cents</span>
+              <span className="deposit-amount">
+                {formatCentsToDollars(deposit)}
+              </span>
             </h3>
             <DepositForm onDeposit={depositCoins} />
             <Button onClick={resetDeposit} className="reset-button">
@@ -65,49 +92,54 @@ const BuyerDashboard = () => {
             </Button>
           </Card>
 
-          <Card className="buy-card">
-            <h3 className="card-title">Buy Product</h3>
-            <BuyForm
-              onBuy={handleBuy}
-              products={products.map((product) => ({
-                id: product.id,
-                name: product.productName,
-                cost: product.cost,
-              }))}
-            />
-          </Card>
+          {/* <Card className="buy-card">
+        <h3 className="card-title">Buy Product</h3>
+        <BuyForm
+          onBuy={handleBuy}
+          products={products.map((product) => ({
+            id: product.id,
+            name: product.productName,
+            cost: product.cost,
+          }))}
+        />
+      </Card> */}
         </div>
 
         <div className="dashboard-column">
           <Card className="products-card">
             <h3 className="card-title">Available Products</h3>
-            {products.slice(0, 3).map((product) => (
-              <div key={product.id} className="product-preview">
-                <h4 className="product-name">{product.productName}</h4>
-                <p className="product-cost">Cost: {product.cost} cents</p>
-                <div className="product-actions">
-                  <input
-                    type="number"
-                    min={1}
-                    defaultValue={1}
-                    className="product-quantity"
-                    id={`quantity-${product.id}`}
-                  />
-                  <Button
-                    onClick={() => {
-                      const quantity = parseInt(
-                        document.getElementById(`quantity-${product.id}`)
-                          ?.value || "1"
-                      );
-                      handleBuy(product.id, quantity);
-                    }}
-                    className="buy-now-button"
-                  >
-                    Buy
-                  </Button>
+            <div className="products-grid">
+              {products.slice(0, 3).map((product) => (
+                <div key={product.id} className="product-preview">
+                  <h4 className="product-name">{product.productName}</h4>
+                  <p className="product-cost">
+                    Cost: {formatCentsToDollars(product.cost)}
+                  </p>
+                  <div className="product-actions">
+                    <input
+                      type="number"
+                      min={1}
+                      defaultValue={1}
+                      className="product-quantity"
+                      id={`quantity-${product.id}`}
+                      aria-label="Quantity"
+                    />
+                    <Button
+                      onClick={() => {
+                        const quantity = parseInt(
+                          document.getElementById(`quantity-${product.id}`)
+                            ?.value || "1"
+                        );
+                        handleBuy(product.id, quantity);
+                      }}
+                      className="buy-now-button"
+                    >
+                      Buy
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
             <Button
               onClick={() => router.push("/dashboard/buyer/buy")}
               className="view-more-button"
@@ -138,17 +170,25 @@ const BuyerDashboard = () => {
                 </thead>
                 <tbody>
                   {purchaseHistory?.map((item) => {
-                    const unitPrice = (
+                    const unitPriceCents = Math.round(
                       parseFloat(item.totalPrice) / item.quantity
-                    ).toFixed(2);
+                    );
                     return (
                       <tr key={item.saleId}>
-                        <td>{new Date(item.date).toLocaleDateString()}</td>
-                        <td>{item.productName}</td>
-                        <td>{item.quantity}</td>
-                        <td>{unitPrice} cents</td>
-                        <td>{item.totalPrice} cents</td>
-                        <td>
+                        <td data-label="Date">
+                          {new Date(item.date).toLocaleDateString()}
+                        </td>
+                        <td data-label="Product">{item.productName}</td>
+                        <td data-label="Quantity">{item.quantity}</td>
+                        <td data-label="Unit Price">
+                          {formatCentsToDollars(unitPriceCents)}
+                        </td>
+                        <td data-label="Total Price">
+                          {formatCentsToDollars(
+                            Math.round(parseFloat(item.totalPrice))
+                          )}
+                        </td>
+                        <td data-label="Status">
                           <span className="status-completed">Completed</span>
                         </td>
                       </tr>
@@ -165,5 +205,4 @@ const BuyerDashboard = () => {
     </div>
   );
 };
-
 export default BuyerDashboard;

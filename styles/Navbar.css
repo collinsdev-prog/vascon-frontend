@@ -15,6 +15,14 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--spacing-4);
+  width: 100%;
+}
+
+.navbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .navbar-logo {
@@ -137,24 +145,78 @@
   color: var(--color-primary);
 }
 
+/* Hamburger menu button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-white);
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
 /* Responsive styling */
 @media screen and (max-width: 768px) {
+  .navbar-header {
+    padding: var(--spacing-2) 0;
+  }
+  
+  .hamburger {
+    display: block;
+    z-index: 100;
+  }
+  
   .navbar-container {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
   
   .navbar-menu {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .navbar-menu.active {
+    max-height: 300px;
+    opacity: 1;
+    visibility: visible;
     margin-top: var(--spacing-4);
   }
   
   .navbar-item {
     margin-left: 0;
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
     width: 100%;
+    text-align: center;
   }
   
   .dropdown-menu {
@@ -166,5 +228,16 @@
   
   .user-info {
     margin-bottom: var(--spacing-4);
+  }
+}
+
+/* For very small screens */
+@media screen and (max-width: 480px) {
+  .navbar-container {
+    padding: 0 var(--spacing-2);
+  }
+  
+  .navbar-logo {
+    font-size: var(--font-size-lg);
   }
 }

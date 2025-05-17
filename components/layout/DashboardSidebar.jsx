@@ -9,6 +9,7 @@ import {
   FiGrid, FiBox, FiPlusCircle, FiUser,
   FiHome, FiShoppingCart, FiDollarSign,
   FiClock, FiLogOut, FiPower, FiShoppingBag,
+  FiX, FiArrowLeft
 } from "react-icons/fi";
 
 const iconMap = {
@@ -23,15 +24,17 @@ const iconMap = {
   "shopping-bag": <FiShoppingBag />,
   "log-out": <FiLogOut />,
   power: <FiPower />,
+  x: <FiX />,
+  "arrow-left": <FiArrowLeft />
 };
 
-const DashboardSidebar = ({ userRole, isOpen, onToggle }) => {
+const DashboardSidebar = ({ userRole, isOpen, onToggle, isMobile }) => {
   const pathname = usePathname();
   const { logout, logoutAll } = useAuth();
   const routes = sidebarRoutes[userRole] || [];
 
-   // Handle logout all sessions
-   const handleLogoutAll = async () => {
+  // Handle logout all sessions
+  const handleLogoutAll = async () => {
     const result = await logoutAll();
     if (result.success) {
       // Redirect to login page or home
@@ -40,9 +43,23 @@ const DashboardSidebar = ({ userRole, isOpen, onToggle }) => {
   };
 
   return (
-    <aside className={`dashboard-sidebar ${isOpen ? "open" : "closed"}`}>
+    <aside className={`dashboard-sidebar ${isOpen ? "open" : "closed"} ${isMobile ? "mobile" : ""}`}>
       <div className="sidebar-header">
-        {isOpen && <h2 className="sidebar-logo">CHOWBOX</h2>}
+        {(isOpen || isMobile) && <h2 className="sidebar-logo">CHOWBOX</h2>}
+        {isMobile && (
+          <button className="sidebar-close" onClick={onToggle} aria-label="Close sidebar">
+            <span className="icon">{iconMap["x"]}</span>
+          </button>
+        )}
+        {!isMobile && (
+          <button 
+            className="sidebar-toggle" 
+            onClick={onToggle} 
+            aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            <span className="icon">{iconMap["arrow-left"]}</span>
+          </button>
+        )}
       </div>
 
       <nav className="sidebar-nav">
@@ -52,10 +69,11 @@ const DashboardSidebar = ({ userRole, isOpen, onToggle }) => {
               <Link
                 href={link.path}
                 className={`sidebar-link ${pathname === link.path ? "active" : ""}`}
-                title={!isOpen ? link.name : ""} // Only show title when sidebar is closed
+                title={!isOpen && !isMobile ? link.name : ""} // Only show title when sidebar is closed and not on mobile
+                onClick={isMobile ? onToggle : undefined} // Close sidebar on mobile when clicking a link
               >
                 <span className="icon">{iconMap[link.icon]}</span>
-                {isOpen && <span className="link-text">{link.name}</span>}
+                {(isOpen || isMobile) && <span className="link-text">{link.name}</span>}
               </Link>
             </li>
           ))}
@@ -66,18 +84,18 @@ const DashboardSidebar = ({ userRole, isOpen, onToggle }) => {
         <button
           className="logout-button"
           onClick={(e) => { e.preventDefault(); logout(); }}
-          title={!isOpen ? "Logout" : ""} 
+          title={!isOpen && !isMobile ? "Logout" : ""} 
         >
           <span className="icon">{iconMap["log-out"]}</span>
-          {isOpen && <span>Logout</span>}
+          {(isOpen || isMobile) && <span>Logout</span>}
         </button>
         <button
           className="logout-all-button"
           onClick={handleLogoutAll}
-          title={!isOpen ? "Logout All Sessions" : ""}
+          title={!isOpen && !isMobile ? "Logout All Sessions" : ""}
         >
           <span className="icon">{iconMap["power"]}</span>
-          {isOpen && <span>Logout All Sessions</span>}
+          {(isOpen || isMobile) && <span>Logout All Sessions</span>}
         </button>
       </div>
     </aside>

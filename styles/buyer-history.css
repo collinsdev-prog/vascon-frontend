@@ -1,0 +1,156 @@
+.buyer-history {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-8) var(--spacing-4);
+}
+
+.purchase-history {
+  overflow: auto;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  margin-bottom: var(--spacing-4); /* Add space below the table for scrollbar */
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+/* Add fade effect to indicate scrollable content */
+.table-responsive::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 20px;
+  background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.9));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Only show the fade when there's overflow */
+.table-responsive.has-overflow::after {
+  opacity: 1;
+}
+
+.buyer-history table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+  min-width: 650px;
+}
+
+.buyer-history table th,
+.buyer-history table td {
+  padding: var(--spacing-3) var(--spacing-2);
+  text-align: left;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+.buyer-history table th {
+  background-color: var(--color-gray-100);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+}
+
+.buyer-history table tr:nth-child(even) {
+  background-color: var(--color-gray-50);
+}
+
+.buyer-history table tr:hover {
+  background-color: var(--color-primary-light);
+}
+
+.status-completed {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.loading {
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--color-gray-600);
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .buyer-history {
+    padding: var(--spacing-4) var(--spacing-2);
+  }
+
+  /* Improve table responsiveness */
+  .buyer-history table {
+    font-size: var(--font-size-sm);
+  }
+
+  .buyer-history table th,
+  .buyer-history table td {
+    padding: var(--spacing-2);
+  }
+}
+
+@media (max-width: 640px) {
+  .buyer-history table {
+    display: block;
+    min-width: unset;
+  }
+
+  .buyer-history table thead {
+    display: none; /* Hide table headers */
+  }
+
+  .buyer-history table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .buyer-history table tr {
+    display: block;
+    margin-bottom: var(--spacing-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-2);
+    background-color: var(--color-gray-50);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .buyer-history table td {
+    display: flex;
+    padding: var(--spacing-2);
+    text-align: right;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .buyer-history table td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add labels for each cell */
+  .buyer-history table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-medium);
+    width: 40%;
+    margin-right: auto;
+    text-align: left;
+  }
+
+  .status-completed {
+    padding: var(--spacing-1);
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .buyer-history {
+    padding: var(--spacing-2);
+  }
+}

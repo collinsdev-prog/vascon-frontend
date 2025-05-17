@@ -9,12 +9,18 @@ import DepositForm from '@/components/buyer/DepositForm';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
+import { formatCentsToDollars } from '@/utils/currency';
 
 const BuyerDepositPage = () => {
   const [alert, setAlert] = useState({ show: false, type: '', message: '' });
   const { user } = useAuth();
   const { depositCoins, resetDeposit, deposit } = useVending();
   const router = useRouter();
+
+  // // Helper to convert cents to formatted dollars
+  // const formatCentsToDollars = (cents) => {
+  //   return `$${(cents / 100).toFixed(2)}`;
+  // };
 
   useEffect(() => {
     if (!user) {
@@ -31,7 +37,7 @@ const BuyerDepositPage = () => {
   const handleDeposit = async (amount) => {
     try {
       await depositCoins(amount);
-      showAlert('success', `Successfully deposited ${amount} cents`);
+      showAlert('success', `Successfully deposited ${formatCentsToDollars(amount)}`);
     } catch (error) {
       console.error('Error making deposit:', error);
       showAlert('error', error.message || 'Failed to deposit');
@@ -55,31 +61,31 @@ const BuyerDepositPage = () => {
     }, 5000);
   };
 
-  // Get the current balance to display - use user.deposit as authoritative 
-  // with fallback to userDeposit from VendingContext
-  const currentBalance = deposit;
-
   return (
     <div className="dashboard buyer-deposit">
       <h1>Deposit Funds</h1>
-      
+
       {alert.show && (
-        <Alert type={alert.type} message={alert.message} onClose={() => setAlert({ show: false })} />
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ show: false, type: '', message: '' })}
+        />
       )}
-      
+
       <div className="dashboard-grid">
         <div className="dashboard-section">
           <Card title="Your Account">
             <div className="account-info">
               <p><strong>Username:</strong> {user?.username}</p>
-              <p><strong>Current Balance:</strong> {currentBalance} cents</p>
+              <p><strong>Current Balance:</strong> {formatCentsToDollars(deposit)}</p>
               <div className="action-buttons">
                 <Button onClick={handleReset} variant="secondary">Reset Deposit</Button>
               </div>
             </div>
           </Card>
         </div>
-        
+
         <div className="dashboard-section">
           <Card title="Deposit Coins">
             <p className="deposit-instructions">

@@ -83,7 +83,7 @@
 .product-cost {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
+  color: var(--color-success);
   margin-bottom: var(--spacing-2);
 }
 
@@ -111,6 +111,45 @@
   font-weight: var(--font-weight-medium);
   margin-top: var(--spacing-4);
 }
+
+.buy-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.quantity-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.quantity-input {
+  padding: var(--spacing-2);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+}
+
+
+.buy-button {
+  padding: var(--spacing-2) var(--spacing-4);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-normal) var(--transition-ease);
+}
+
+.buy-button:disabled {
+  background-color: var(--color-gray-300);
+  cursor: not-allowed;
+}
+
+
 
 /* Purchase Result styles */
 .purchase-result {
